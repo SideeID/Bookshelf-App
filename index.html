@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bokshelf Apps</title>
+    <link rel="stylesheet" href="assets/styles/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Bookshelf Apps use DOM and Local Storage</h1>
+    </header>
+    <main>
+      <section class="container">
+        <section class="input-section">
+          <h2>Input nama buku</h2>
+
+          <form id="inputBook">
+            <div class="input">
+              <label for="inputBookTitle">Nama Buku</label>
+              <input type="text" id="inputBookTitle" name="inputBook" />
+            </div>
+
+            <div class="input">
+              <label for="inputBookPenulis">Penulis</label>
+              <input type="text" id="inputBookPenulis" name="inputPenulis" />
+            </div>
+
+            <div class="input">
+              <label for="inputBookTahun">Tahun</label>
+              <input type="number" id="inputBookTahun" name="inputTahun" />
+            </div>
+
+            <div class="input">
+                <label for="inputBookStatus">Status</label>
+                <select id="inputBookStatus" name="inputStatus">
+                    <option value="selesai">Selesai dibaca</option>
+                    <option value="belum">Belum selesai dibaca</option>
+                </select>
+            </div>
+
+            <button type="submit" id="btn_submit">
+              Masukkan buku ke dalam rak
+            </button>
+          </form>
+        </section>
+
+        <section class="search-section">
+          <div class="books-search">
+            <input type="text" id="search-input" placeholder="Cari buku..." />
+            <button id="search-button">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div>
+            <select id="status-filter">
+              <option value="semua">Semua</option>
+              <option value="belum">Belum selesai dibaca</option>
+              <option value="selesai">Selesai dibaca</option>
+            </select>
+          </div>
+
+            <h2>Rak Buku</h2>
+            <div id="books-shelf">
+                <article>
+                    <div class="card-books">
+                        <div>
+                            <h3 id="judul">Judul Buku</h3>
+                            <p>Penulis: <span id="penulis">Penulis</span></p>
+                            <p>Tahun: <span id="tahun">Tahun</span></p>
+                        </div>           
+                        <div class="btn-bookshelf">
+                            <button id="btn-check">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button id="btn_edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button class="btn-hapus">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>Copyright &#169; 2024 - All Rights Reserved by <a href="https://github.com/SideeID" target="_blank" >Side ID</a></p>
+    </footer>
+
+    <!-- pop up edit -->
+    <div id="edit-popup" class="edit-popup">
+        <h3>Edit Buku</h3>
+        <form>
+          <label for="editBookTitle">Nama Buku</label>
+          <input type="text" id="editBookTitle" name="editBookTitle" />
+      
+          <label for="editBookPenulis">Penulis</label>
+          <input type="text" id="editBookPenulis" name="editBookPenulis" />
+      
+          <label for="editBookTahun">Tahun</label>
+          <input type="number" id="editBookTahun" name="editBookTahun" />
+      
+          <div class="btn-container">
+            <button type="button" id="btn_cancel">Batal</button>
+            <button type="submit" id="btn_save">Simpan Perubahan</button>
+          </div>
+        </form>
+    </div>
+    
+    <script src="assets/js/script.js"></script>
+    <script src="https://kit.fontawesome.com/c79e220d71.js" crossorigin="anonymous"></script>
+  </body>
+</html>
