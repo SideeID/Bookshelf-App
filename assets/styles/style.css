@@ -163,6 +163,8 @@ header {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-top: 1rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .card-books:hover {
@@ -263,4 +265,29 @@ footer {
 
 .btn-bookshelf button i {
   pointer-events: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    flex-direction: column; 
+  }
+
+  .input-section, .search-section {
+    flex: 1;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .card-books {
+    width: 90%;
+  }
+
+  .edit-popup {
+    width: 90%;
+    max-width: none;
+  }
+
+  .btn-container {
+    text-align: center;
+  }
 }
