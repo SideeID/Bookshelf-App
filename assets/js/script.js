@@ -21,38 +21,37 @@ const editAuthor = document.getElementById("editBookPenulis");
 const editYear = document.getElementById("editBookTahun");
 const btnClose = document.querySelectorAll(".btn-cancel");
 const btnSave = document.getElementById("btn-save");
+const completedBookShelf = document.getElementById("books-shelf-IsCompleted");
+const notCompletedBookShelf = document.getElementById("books-shelf-NotCompleted");
 let books = [];
+
 const reloadPage = () => {
     location.reload();
 }
 
 const toggleStatus = (index) => {
   const book = books[index];
-  if (book && book.status) {
-    if (book.status === "selesai") {
-      books[index].status = "belum";
-    //   reloadPage();
-        renderBooks(books);
-    } else if (book.status === "belum") {
-      books[index].status = "selesai";
-        // reloadPage();
-        renderBooks(books);
-    } else {
-      console.error(`Status buku dengan indeks ${index} tidak ditemukan.`);
-    }
+  if (book) {
+    books[index].isComplete = !book.isComplete;
     updateLocalStorage();
     renderBooks(books);
   } else {
-    console.error(
-      `Buku dengan indeks ${index} tidak ditemukan atau tidak memiliki properti status.`
-    );
+    console.error(`Buku dengan indeks ${index} tidak ditemukan.`);
   }
 };
 
 const deleteBook = (index) => {
-  books.splice(index, 1);
-  updateLocalStorage();
-  renderBooks(books);
+  const book = books[index];
+  if (book) {
+    const shelfId = book.isComplete ? "books-shelf-IsCompleted" : "books-shelf-NotCompleted";
+    const shelf = document.getElementById(shelfId);
+    const bookElement = document.getElementById(`book-${index}`);
+    shelf.removeChild(bookElement);
+    books.splice(index, 1);
+    updateLocalStorage();
+  } else {
+    console.error(`Buku dengan indeks ${index} tidak ditemukan.`);
+  }
 };
 
 const openEditPopup = (index) => {
@@ -81,37 +80,53 @@ const displayDeleteConfirmation = (index) => {
   }
 };
 
-bookList.addEventListener("click", (e) => {
+completedBookShelf.addEventListener("click", (e) => {
   const targetId = e.target.id;
   const index = parseInt(targetId.split("-")[2]);
   if (!isNaN(index)) {
-    if (targetId.startsWith("btn-check")) {
-      toggleStatus(index);
-    } else if (targetId.startsWith("btn-edit")) {
-      openEditPopup(index);
-    } else if (targetId.startsWith("btn-hapus")) {
-      displayDeleteConfirmation(index)
-    }
+      if (targetId.startsWith("btn-check")) {
+          toggleStatus(index);
+      } else if (targetId.startsWith("btn-edit")) {
+          openEditPopup(index);
+      } else if (targetId.startsWith("btn-hapus")) {
+          displayDeleteConfirmation(index)
+      }
   } else {
-    console.error(`Indeks tidak valid: ${index}`);
+      console.error(`Indeks tidak valid: ${index}`);
+  }
+});
+
+notCompletedBookShelf.addEventListener("click", (e) => {
+  const targetId = e.target.id;
+  const index = parseInt(targetId.split("-")[2]);
+  if (!isNaN(index)) {
+      if (targetId.startsWith("btn-check")) {
+          toggleStatus(index);
+      } else if (targetId.startsWith("btn-edit")) {
+          openEditPopup(index);
+      } else if (targetId.startsWith("btn-hapus")) {
+          displayDeleteConfirmation(index)
+      }
+  } else {
+      console.error(`Indeks tidak valid: ${index}`);
   }
 });
 
 editBookForm.addEventListener("submit", (e) => {
   try {
-    e.preventDefault();
-    updateBook();
+      e.preventDefault();
+      updateBook();
   } catch (error) {
-    alert(error);
+      alert(error);
   }
 });
 
 inputBookForm.addEventListener("submit", (e) => {
   try {
-    e.preventDefault();
-    addBook();
+      e.preventDefault();
+      addBook();
   } catch (error) {
-    alert(error);
+      alert(error);
   }
 });
 
@@ -140,33 +155,39 @@ const getBooks = () => {
 };
 
 const renderBooks = (books) => {
-    bookList.innerHTML = '';
+  completedBookShelf.innerHTML = "";
+  notCompletedBookShelf.innerHTML = "";
 
-    books.forEach((book, index) => {
-        const article = document.createElement('article');
-        article.innerHTML = `
-            <div class="card-books">
-                <div>
-                    <h3 id="judul-${index}">${book.title}</h3>
-                    <p>Penulis: <span id="penulis-${index}">${book.author}</span></p>
-                    <p>Tahun: <span id="tahun-${index}">${book.year}</span></p>
-                    <p>Status: <span id="status-${index}">${book.status} dibaca</span></p>
-                </div>
-                <div class="btn-bookshelf">
-                    <button id="btn-check-${index}" class="btn-check">
-                        <i class="fa-solid fa-check"></i>
-                    </button>
-                    <button id="btn-edit-${index}" class="btn-edit">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
-                    <button id="btn-hapus-${index}" class="btn-hapus">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-        bookList.appendChild(article);
-    });
+  books.forEach((book, index) => {
+      const article = document.createElement('article');
+      article.innerHTML = `
+          <div class="card-books">
+              <div>
+                  <h3 id="judul-${index}">${book.title}</h3>
+                  <p>Penulis: <span id="penulis-${index}">${book.author}</span></p>
+                  <p>Tahun: <span id="tahun-${index}">${book.year}</span></p>
+                  <p>Status: <span id="status-${index}">${book.isComplete ? 'selesai' : 'belum'} dibaca</span></p>
+              </div>
+              <div class="btn-bookshelf">
+                  <button id="btn-check-${index}" class="btn-check">
+                      <i class="fa-solid fa-check"></i>
+                  </button>
+                  <button id="btn-edit-${index}" class="btn-edit">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                  <button id="btn-hapus-${index}" class="btn-hapus">
+                      <i class="fa-solid fa-trash"></i>
+                  </button>
+              </div>
+          </div>
+      `;
+
+      if (book.isComplete) {
+          completedBookShelf.appendChild(article);
+      } else {
+          notCompletedBookShelf.appendChild(article);
+      }
+  });
 };
 
 
@@ -176,7 +197,7 @@ const addBook = () => {
   const inputYear = parseInt(inputBookForm.elements.inputBookTahun.value);
   const inputStatus = inputBookForm.elements.inputBookStatus.value.trim();
 
-  if (!inputTitle || !inputAuthor || !inputYear || !inputStatus) {
+  if (!inputTitle || !inputAuthor || !inputYear || inputStatus === "") {
     throw new Error("Semua field harus diisi");
   }
   if (isNaN(inputYear) || inputYear <= 0) {
@@ -188,8 +209,9 @@ const addBook = () => {
     title: inputTitle,
     author: inputAuthor,
     year: inputYear,
-    status: inputStatus,
+    isComplete: inputStatus === "selesai" ? true : false,
   };
+
   books.push(newBook);
   updateLocalStorage();
   renderBooks(books);
@@ -202,22 +224,17 @@ const updateLocalStorage = () => {
 const searchBook = () => {
   const keyword = searchInput.value.trim().toLowerCase();
   const filteredBooks = books.filter((book) => {
-    return (
-      book.title.toLowerCase().includes(keyword) ||
-      book.author.toLowerCase().includes(keyword)
-    );
+      return (
+          book.title.toLowerCase().includes(keyword) || book.author.toLowerCase().includes(keyword)
+      );
   });
   renderBooks(filteredBooks);
 };
 
 const filterBook = () => {
   const status = statusFilter.value;
-  if (status === "semua") {
-    renderBooks(books);
-  } else {
-    const filteredBooks = books.filter((book) => book.status === status);
-    renderBooks(filteredBooks);
-  }
+  const filteredBooks = status === "semua" ? books : books.filter(book => book.isComplete === (status === "selesai"));
+  renderBooks(filteredBooks);
 };
 
 const updateBook = () => {
@@ -227,8 +244,9 @@ const updateBook = () => {
     title: editTitle.value,
     author: editAuthor.value,
     year: parseInt(editYear.value),
-    status: books[index].status,
+    isComplete: books[index].isComplete,
   };
+
   books[index] = editedBook;
   updateLocalStorage();
   renderBooks(books);
