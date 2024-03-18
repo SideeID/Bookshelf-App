@@ -1,4 +1,4 @@
-gconst inputBookForm = document.querySelector("#inputBook");
+const inputBookForm = document.querySelector("#inputBook");
 const inputTitle = document.getElementById("inputBookTitle");
 const inputAuthor = document.getElementById("inputBookPenulis");
 const inputYear = document.getElementById("inputBookTahun");
