@@ -1,5 +1,4 @@
-console.log("Hello World!");
-const inputBookForm = document.querySelector("#inputBook");
+gconst inputBookForm = document.querySelector("#inputBook");
 const inputTitle = document.getElementById("inputBookTitle");
 const inputAuthor = document.getElementById("inputBookPenulis");
 const inputYear = document.getElementById("inputBookTahun");
@@ -40,19 +39,6 @@ const toggleStatus = (index) => {
   }
 };
 
-const deleteBook = (index) => {
-  const book = books[index];
-  if (book) {
-    const shelfId = book.isComplete ? "books-shelf-IsCompleted" : "books-shelf-NotCompleted";
-    const shelf = document.getElementById(shelfId);
-    const bookElement = document.getElementById(`book-${index}`);
-    shelf.removeChild(bookElement);
-    books.splice(index, 1);
-    updateLocalStorage();
-  } else {
-    console.error(`Buku dengan indeks ${index} tidak ditemukan.`);
-  }
-};
 
 const openEditPopup = (index) => {
   const book = books[index];
@@ -73,12 +59,6 @@ btnClose.forEach((btn) => {
   });
 });
 
-const displayDeleteConfirmation = (index) => {
-  const confirmation = confirm("Apakah Anda yakin ingin menghapus buku ini?");
-  if (confirmation) {
-      deleteBook(index);
-  }
-};
 
 completedBookShelf.addEventListener("click", (e) => {
   const targetId = e.target.id;
@@ -89,7 +69,12 @@ completedBookShelf.addEventListener("click", (e) => {
       } else if (targetId.startsWith("btn-edit")) {
           openEditPopup(index);
       } else if (targetId.startsWith("btn-hapus")) {
-          displayDeleteConfirmation(index)
+          const confirmDelete = confirm("Apaklah anda yakin ingin menghapus buku ini?");
+          if (confirmDelete) {
+              books.splice(index, 1);
+              updateLocalStorage();
+              renderBooks(books);
+          }
       }
   } else {
       console.error(`Indeks tidak valid: ${index}`);
@@ -105,12 +90,18 @@ notCompletedBookShelf.addEventListener("click", (e) => {
       } else if (targetId.startsWith("btn-edit")) {
           openEditPopup(index);
       } else if (targetId.startsWith("btn-hapus")) {
-          displayDeleteConfirmation(index)
+          const confirmDelete = confirm("Are you sure you want to delete this book?");
+          if (confirmDelete) {
+              books.splice(index, 1);
+              updateLocalStorage();
+              renderBooks(books);
+          }
       }
   } else {
       console.error(`Indeks tidak valid: ${index}`);
   }
 });
+
 
 editBookForm.addEventListener("submit", (e) => {
   try {
@@ -138,6 +129,11 @@ statusFilter.addEventListener("change", () => {
   filterBook();
 });
 
+const isBookshelfEmpty = () => {
+  return books.length === 0;
+};
+
+
 document.addEventListener("DOMContentLoaded", () => {
   books = getBooks();
   renderBooks(books);
@@ -157,6 +153,14 @@ const getBooks = () => {
 const renderBooks = (books) => {
   completedBookShelf.innerHTML = "";
   notCompletedBookShelf.innerHTML = "";
+
+  if (books.length === 0) {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.textContent = "Rak buku kosong";
+    completedBookShelf.appendChild(emptyMessage);
+    notCompletedBookShelf.appendChild(emptyMessage.cloneNode(true));
+    return;
+  }
 
   books.forEach((book, index) => {
       const article = document.createElement('article');
