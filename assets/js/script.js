@@ -74,6 +74,13 @@ btnClose.forEach((btn) => {
   });
 });
 
+const displayDeleteConfirmation = (index) => {
+  const confirmation = confirm("Apakah Anda yakin ingin menghapus buku ini?");
+  if (confirmation) {
+      deleteBook(index);
+  }
+};
+
 bookList.addEventListener("click", (e) => {
   const targetId = e.target.id;
   const index = parseInt(targetId.split("-")[2]);
@@ -83,7 +90,7 @@ bookList.addEventListener("click", (e) => {
     } else if (targetId.startsWith("btn-edit")) {
       openEditPopup(index);
     } else if (targetId.startsWith("btn-hapus")) {
-      deleteBook(index);
+      displayDeleteConfirmation(index)
     }
   } else {
     console.error(`Indeks tidak valid: ${index}`);
